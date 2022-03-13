@@ -47,7 +47,7 @@ public class TweetAppApplication {
 						System.out.println("Write a tweet: ");
 						String tweetText = sc.nextLine();
 						Date currentDate =  new Date();
-						Tweet tweet  = new Tweet("id", tweetText, loggedInUser, currentDate);
+						Tweet tweet  = new Tweet("id", tweetText, currentDate);
 						System.out.println(tweet.getDatePosted());
 						tweetAppActiveService.createTweet(tweet);
 						break;
@@ -80,6 +80,7 @@ public class TweetAppApplication {
 						break;
 					case 5:
 						System.out.println("Reset Password");
+						tweetAppActiveService.resetPassword(loggedInUser);
 						break;
 					case 6:
 						System.out.println("Logout");

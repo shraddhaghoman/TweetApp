@@ -12,4 +12,5 @@ public interface TweetAppActiveService {
 	public List<Tweet> viewAllTweets();
 	public List<User> viewAllUsers();
 	public void resetPassword(String emailId);
+	public void logoutUser(String emailId); //will set loggedIn to false for emailId
 }
