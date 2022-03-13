@@ -25,8 +25,9 @@ public class TweetAppService {
 	
 	public void runApplication() {
 		sc = new Scanner(System.in);
-		boolean isLoggedIn = tweetAppInactiveService.isUserLoggedIn();
+		
 		while(true) {
+			boolean isLoggedIn = tweetAppInactiveService.isUserLoggedIn(loggedInUser);
 			if(isLoggedIn) {
 				System.out.println("\nChoose the action"
 						+ "\n 1.Post a tweet" +"\n " + 
@@ -49,38 +50,35 @@ public class TweetAppService {
 					break;
 				case 2:
 					System.out.println("View my tweets");
-					tweetAppActiveService.viewMyTweets();
-//					myTweets.forEach(myTweet -> {
-//						System.out.println("Tweet: "+myTweet.getText());
-//						System.out.println("Date posted: "+myTweet.getDatePosted());
-//					});
+					tweetAppActiveService.viewMyTweets(loggedInUser);
 					break;
 				case 3: 
 					System.out.println("View all tweets");
 					tweetAppActiveService.viewAllTweets();
-//					allTweets.forEach(currentTweet -> {
-//						System.out.println("Tweet: "+currentTweet.getText());
-//						System.out.println("Posted by: "+currentTweet.getUserId());
-//						System.out.println("Date posted: "+currentTweet.getDatePosted());
-//					});
 					break;
 				case 4:
 					System.out.println("View All Users");
 					tweetAppActiveService.viewAllUsers();
-//					usersList.forEach(user -> {
-//						System.out.println("Name: "+user.getName());
-//						System.out.println("Email Id: "+user.getEmail());
-//						System.out.println("Mobile No.: "+user.getMobile());
-////						System.out.println("Tweets posted"+ user.getTweets().size());
-//					});
 					break;
 				case 5:
 					System.out.println("Reset Password");
-					tweetAppActiveService.resetPassword(loggedInUser);
+					String status_reset = tweetAppInactiveService.resetPassword(loggedInUser);
+					if("success".equals(status_reset)) {
+						System.out.println("Password reset successful");
+					}else if("invalidAnswer".equals(status_reset)) {
+						System.out.println("Invalid Answer to security Question");
+					}else {
+						System.out.println("Invalid Session");
+					}
 					break;
 				case 6:
-					System.out.println("Logout");
-					isLoggedIn = false;
+					String status =  tweetAppActiveService.logoutUser(loggedInUser);
+					if("success".equals(status)) {
+						System.out.println("Logged out Successfully");
+						isLoggedIn = false;
+					}else {
+						System.out.println("Invalid Session");
+					}
 					break;
 				default:
 					System.out.println("Choose correct option");
@@ -88,7 +86,7 @@ public class TweetAppService {
 				
 			}else {
 				System.out.println("You are not logged In \nChoose the action"
-						+ "\n 1.Register \n 2.Login \n 3.Password Reset \n 4.Exit");
+						+ "\n 1.Register \n 2.Login \n 3.Reset Password \n 4.Exit");
 				int option = sc.nextInt();
 				sc.nextLine();
 				switch(option) {
@@ -107,8 +105,8 @@ public class TweetAppService {
 					System.out.println("Answer for secret question");
 					String answer = sc.nextLine();
 					PasswordResetData passwordResetData = new PasswordResetData(secretQuestion, answer);
-					User user = new User("1", name, email, mobile, password,
-							false,passwordResetData);//generate auto id
+					User user = new User(name, email, mobile, password,
+							false,passwordResetData);
 					tweetAppInactiveService.registerUser(user);
 					break;
 				case 2:
@@ -117,18 +115,31 @@ public class TweetAppService {
 					String email_login= sc.nextLine();
 					System.out.println("Enter Password");
 					String password_login=sc.nextLine();
-					if(tweetAppInactiveService.validateCredentials(email_login,password_login)) {
+					String status = tweetAppInactiveService.validateCredentials(email_login,password_login);
+					if("validUser".equals(status)) {
 						isLoggedIn = true;
 						loggedInUser = email_login;
 						System.out.println("Successfully logged in");
+					}else if("userNotFound".equals(status)){
+						System.out.println("Invalid Username");
+						break;
 					}else {
+						System.out.println("Invalid Password");
 						break;
 					}
 					break;
 				case 3: 
-					System.out.println("Password reset");
-					
-					System.out.println();
+					System.out.println("Reset Password");
+					System.out.println("Enter Email-ID");
+					String email_reset =  sc.nextLine();
+					String status_reset = tweetAppInactiveService.resetPassword(email_reset);
+					if("success".equals(status_reset)) {
+						System.out.println("Password reset successful");
+					}else if("invalidAnswer".equals(status_reset)) {
+						System.out.println("Invalid Answer to security Question");
+					}else {
+						System.out.println("Invalid Email-Id");
+					}
 					break;
 				case 4:
 					System.out.println("Operation Ended");

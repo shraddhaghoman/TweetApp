@@ -1,6 +1,7 @@
 package com.tweetapp.model;
 
 import org.springframework.data.annotation.Id;
+import org.springframework.data.mongodb.core.index.Indexed;
 import org.springframework.data.mongodb.core.mapping.Document;
 
 @Document("user")
@@ -9,7 +10,9 @@ public class User {
 	@Id
 	private String id; 
 	private String name;
-	private String email; //unique
+	
+	@Indexed(unique = true)
+	private String email; 
 	private String mobile;
 	private String password;
 	private boolean loggedIn;
@@ -17,17 +20,15 @@ public class User {
 //	private List<String> tweets;
 	
 	
-	public User(String id, String name, String email, String mobile, String password, boolean loggedIn,
+	public User(String name, String email, String mobile, String password, boolean loggedIn,
 			PasswordResetData passwordResetData) {
 		super();
-		this.id = id;
 		this.name = name;
 		this.email = email;
 		this.mobile = mobile;
 		this.password = password;
 		this.loggedIn = loggedIn;
 		this.passwordResetData = passwordResetData;
-//		this.tweets = tweets;
 	}
 	public PasswordResetData getPasswordResetData() {
 		return passwordResetData;
@@ -77,5 +78,11 @@ public class User {
 	public void setLoggedIn(boolean loggedIn) {
 		this.loggedIn = loggedIn;
 	}
+	@Override
+	public String toString() {
+		return "User [id=" + id + ", name=" + name + ", email=" + email + ", mobile=" + mobile + ", password="
+				+ password + ", loggedIn=" + loggedIn + ", passwordResetData=" + passwordResetData + "]";
+	}
+	
 	
 }

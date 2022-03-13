@@ -1,13 +1,17 @@
 package com.tweetapp.service;
 
+import java.util.List;
+import java.util.Optional;
 import java.util.Scanner;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import com.tweetapp.dao.TweetAppDao;
+import com.tweetapp.dao.TweetUserDao;
 import com.tweetapp.model.PasswordResetData;
 import com.tweetapp.model.Tweet;
+import com.tweetapp.model.User;
 
 @Service
 public class TweetAppActiveServiceImpl implements TweetAppActiveService{
@@ -15,6 +19,9 @@ public class TweetAppActiveServiceImpl implements TweetAppActiveService{
 	
 	@Autowired
 	private TweetAppDao tweetAppDao;
+	
+	@Autowired
+	private TweetUserDao tweetUserDao;
 	
 	Scanner sc = new Scanner(System.in);
 	@Override
@@ -25,53 +32,76 @@ public class TweetAppActiveServiceImpl implements TweetAppActiveService{
 	}
 
 	@Override
-	public void viewMyTweets() {
-		
+	public void viewMyTweets(String userId) {
+		List<Tweet> myTweets = tweetAppDao.findByUserId(userId);
+		if(myTweets.isEmpty()) {
+			System.out.println("***No tweets available***");
+		}
+		else
+			myTweets.forEach(tweet -> getTweetDetails(tweet));
 	}
 
 	@Override
 	public void viewAllTweets() {
-		System.out.println("yo");
-		System.out.println("val"+ tweetAppDao);
-		tweetAppDao.findAll().forEach(tweet -> getTweetDetails(tweet));
+		List<Tweet> tweets = tweetAppDao.findAll();
+		if(tweets.isEmpty()) {
+			System.out.println("***No tweets available***");
+		}
+		else
+		tweets.forEach(tweet -> getTweetDetails(tweet));
 	}
 	
 	public void getTweetDetails(Tweet tweet) {
 
 		System.out.println("Tweet: "+tweet.getText());
 		System.out.println("Posted by: "+tweet.getUserId());
-		System.out.println("Date posted: "+tweet.getDatePosted());
+		System.out.println("Date posted: "+tweet.getDatePosted()+"\n");
         
     }
+	
+	public void getUserDetails(User user) {
+
+		System.out.println("Name: "+user.getName());
+		System.out.println("Email Id: "+user.getEmail());
+		System.out.println("Mobile No.: "+user.getMobile()+"\n");
+        
+    }
+	
 	@Override
 	public void viewAllUsers() {
-		// TODO Auto-generated method stub
+		tweetUserDao.findAll().forEach(user -> getUserDetails(user));
 	}
 
-	@Override
-	public void resetPassword(String emailId) {
-		//find question and answer for emailid from database
-//		PasswordResetData passwordResetData = tweetAppDao.getUserSecretQA(emailId);
-//		System.out.println("Answer the Security Question: \n "+passwordResetData.getSecretQuestion());
-//		String answer =  sc.nextLine();
-//		if(answer.equals(passwordResetData.getAnswer())) {
-//			System.out.println("Insert new password: ");
-//			String password =  sc.nextLine();
-//			if(tweetAppDao.updatePassword(emailId, password)) {
-//				System.out.println("password updated successfully");
+//	@Override
+//	public String resetPassword(String emailId) {
+//		Optional<User> user = tweetUserDao.findByEmail(emailId);
+//		if(user.isPresent()) {
+//			PasswordResetData passwordResetData = user.get().getPasswordResetData(); 
+//			System.out.println("Answer Security Question: \n Question: "+ passwordResetData.getSecretQuestion()+"\n Answer: ");
+//			String answer = sc.nextLine();
+//			if(answer.equals(passwordResetData.getAnswer())) {
+//				System.out.println("Enter new Password: ");
+//				String newPassword = sc.nextLine();
+//				user.get().setPassword(newPassword);
+//				tweetUserDao.save(user.get());
+//				return "success";
 //			}else {
-//				System.out.println("Error while updating password");
+//				return "invalidAnswer";
 //			}
-//		}else {
-//			System.out.println("Wrong answer to security question");
 //		}
-		
-	}
+//		return "invalidUser";
+//	}
 
 	@Override
-	public void logoutUser(String emailId) {
-		// TODO Auto-generated method stub
-		
+	public String logoutUser(String emailId) {
+		Optional<User> user = tweetUserDao.findByEmail(emailId);
+		if(user.isPresent()) {
+			user.get().setLoggedIn(false);
+			tweetUserDao.save(user.get());
+			return "success";
+		}else {
+			return "invalid";
+		}
 	}
 
 }

@@ -7,8 +7,8 @@ import com.tweetapp.model.User;
 @Service
 public interface TweetAppInactiveService {
 
-	public boolean isUserLoggedIn();
+	public boolean isUserLoggedIn(String email);
 	public void registerUser(User user);
-//	public void updateLoginStatus(String id, boolean status);
-	public boolean validateCredentials(String email_login, String password_login);
+	public String resetPassword(String email);
+	public String validateCredentials(String email_login, String password_login);
 }
