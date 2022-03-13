@@ -1,9 +1,14 @@
 package com.tweetapp.dao;
 
-import com.tweetapp.model.PasswordResetData;
+import org.springframework.data.mongodb.repository.MongoRepository;
+import org.springframework.stereotype.Repository;
 
-public interface TweetAppDao {
+import com.tweetapp.model.Tweet;
 
-	public PasswordResetData getUserSecretQA(String email);
-	public boolean updatePassword(String email, String newPassword);
+@Repository
+public interface TweetAppDao extends MongoRepository<Tweet, String>{
+
+//	public PasswordResetData getUserSecretQA(String email);
+//	public boolean updatePassword(String email, String newPassword);
+	
 }

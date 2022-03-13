@@ -1,7 +1,10 @@
 package com.tweetapp.service;
 
+import org.springframework.stereotype.Service;
+
 import com.tweetapp.model.User;
 
+@Service
 public class TweetAppInactiveServiceImpl implements TweetAppInactiveService{
 
 	@Override
