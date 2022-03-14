@@ -2,15 +2,14 @@ package com.tweetapp.service;
 
 import org.springframework.stereotype.Service;
 
-import com.tweetapp.model.Tweet;
+import com.tweetapp.exception.UsernameInvalidException;
 
 @Service
 public interface TweetAppActiveService {
 	
-	public void createTweet(Tweet tweet);
+	public void createTweet(String userId);
 	public void viewMyTweets(String userId);
 	public void viewAllTweets();
 	public void viewAllUsers();
-//	public String resetPassword(String emailId);
-	public String logoutUser(String emailId); 
+	public void logoutUser(String emailId) throws UsernameInvalidException; 
 }
