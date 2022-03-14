@@ -24,6 +24,7 @@ public class TweetAppInactiveServiceImpl implements TweetAppInactiveService {
 	@Override
 	public boolean isUserLoggedIn(String email_login) {
 		Optional<User> user = tweetUserDao.findByEmail(email_login);
+		
 		if (user.isPresent()) {
 			if (user.get().isLoggedIn()) {
 				return true;
@@ -36,36 +37,33 @@ public class TweetAppInactiveServiceImpl implements TweetAppInactiveService {
 
 	@Override
 	public void registerUser() {
-		
+
 		System.out.println("Enter name");
-		String name= sc.nextLine();
+		String name = sc.nextLine();
 		System.out.println("Enter Email-Id");
-		String email= sc.nextLine();
+		String email = sc.nextLine();
 		System.out.println("Enter Mobile Number");
-		String mobile= sc.nextLine();
+		String mobile = sc.nextLine();
 		System.out.println("Choose Password");
-		String password= sc.nextLine();
+		String password = sc.nextLine();
 		System.out.println("Choose secret question");
-		String secretQuestion =  sc.nextLine();
+		String secretQuestion = sc.nextLine();
 		System.out.println("Answer for secret question");
 		String answer = sc.nextLine();
 		PasswordResetData passwordResetData = new PasswordResetData(secretQuestion, answer);
-		User user = new User(name, email, mobile, password,
-				false,passwordResetData);
-		
+		User user = new User(name, email, mobile, password, false, passwordResetData);
+
 		System.out.println("Started Registration");
 		tweetUserDao.save(user);
 		System.out.println("Registered successfully");
 	}
 
 	@Override
-	public void validateCredentials() throws PasswordInvalidException, UsernameInvalidException {
+	public void validateCredentials(String email_login) throws PasswordInvalidException, UsernameInvalidException {
 
-		System.out.println("Enter Email-Id");
-		String email_login= sc.nextLine();
 		System.out.println("Enter Password");
-		String password_login=sc.nextLine();
-		
+		String password_login = sc.nextLine();
+
 		Optional<User> user = tweetUserDao.findByEmail(email_login);
 		if (user.isPresent()) {
 			if (user.get().getPassword().equals(password_login)) {
@@ -75,16 +73,20 @@ public class TweetAppInactiveServiceImpl implements TweetAppInactiveService {
 			} else {
 				throw new PasswordInvalidException(email_login);
 			}
+		} else {
+			throw new UsernameInvalidException(email_login);
 		}
-		throw new UsernameInvalidException(email_login);
+			
 	}
 
 	@Override
-	public void resetPassword() throws AnswerInvalidException, UsernameInvalidException {
-		
-		System.out.println("Enter Username");
-		String email_reset =  sc.nextLine();
-		
+	public void resetPassword(String email_reset) throws AnswerInvalidException, UsernameInvalidException {
+
+		if(email_reset.isEmpty()) {
+			System.out.println("Enter Username");
+			email_reset = sc.nextLine();
+		}
+
 		Optional<User> user = tweetUserDao.findByEmail(email_reset);
 		if (user.isPresent()) {
 			PasswordResetData passwordResetData = user.get().getPasswordResetData();
@@ -100,8 +102,8 @@ public class TweetAppInactiveServiceImpl implements TweetAppInactiveService {
 			} else {
 				throw new AnswerInvalidException(passwordResetData.getSecretQuestion());
 			}
-		}
-		throw new UsernameInvalidException(email_reset);
+		} else
+			throw new UsernameInvalidException(email_reset);
 	}
 
 }

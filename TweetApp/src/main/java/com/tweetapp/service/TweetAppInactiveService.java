@@ -13,7 +13,7 @@ public interface TweetAppInactiveService {
 
 	public void registerUser();
 
-	public void resetPassword() throws AnswerInvalidException, UsernameInvalidException;
+	public void resetPassword(String loggedInUser) throws AnswerInvalidException, UsernameInvalidException;
 
-	public void validateCredentials() throws PasswordInvalidException, UsernameInvalidException;
+	public void validateCredentials(String email_login) throws PasswordInvalidException, UsernameInvalidException;
 }

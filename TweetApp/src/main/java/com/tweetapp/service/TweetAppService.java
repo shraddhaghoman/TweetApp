@@ -54,7 +54,7 @@ public class TweetAppService {
 					System.out.println("Reset Password");
 
 					try {
-						tweetAppInactiveService.resetPassword();
+						tweetAppInactiveService.resetPassword(loggedInUser);
 					} catch (AnswerInvalidException answerInvalidException) {
 						System.out.println("Error: " + answerInvalidException.getMessage());
 					} catch (UsernameInvalidException usernameInvalidException) {
@@ -66,6 +66,7 @@ public class TweetAppService {
 					try {
 						tweetAppActiveService.logoutUser(loggedInUser);
 						isLoggedIn = false;
+						loggedInUser="";
 					} catch (UsernameInvalidException usernameInvalidException) {
 						System.out.println("Error: " + usernameInvalidException.getMessage());
 					}
@@ -87,7 +88,11 @@ public class TweetAppService {
 				case 2:
 					System.out.println("***Login***");
 					try {
-						tweetAppInactiveService.validateCredentials();
+						System.out.println("Enter Email-Id");
+						String email_login = sc.nextLine();
+						tweetAppInactiveService.validateCredentials(email_login);
+						isLoggedIn = true;
+						loggedInUser = email_login;
 					} catch (PasswordInvalidException passwordInvalidException) {
 						System.out.println("Error: " + passwordInvalidException.getMessage());
 					} catch (UsernameInvalidException usernameInvalidException) {
@@ -98,7 +103,7 @@ public class TweetAppService {
 					System.out.println("***Reset Password***");
 
 					try {
-						tweetAppInactiveService.resetPassword();
+						tweetAppInactiveService.resetPassword("");
 					} catch (AnswerInvalidException answerInvalidException) {
 						System.out.println("Error: " + answerInvalidException.getMessage());
 					} catch (UsernameInvalidException usernameInvalidException) {
