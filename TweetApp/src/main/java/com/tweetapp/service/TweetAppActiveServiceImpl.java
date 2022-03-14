@@ -4,6 +4,7 @@ import java.util.Date;
 import java.util.List;
 import java.util.Optional;
 import java.util.Scanner;
+import java.util.regex.Pattern;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -27,8 +28,20 @@ public class TweetAppActiveServiceImpl implements TweetAppActiveService {
 
 	@Override
 	public void createTweet(String userId) {
-		System.out.println("Write a tweet: ");
-		String tweetText = sc.nextLine();
+
+		boolean isValid = false;
+		String tweetText = "";
+		do {
+			System.out.println("Write a tweet: ");
+			tweetText = sc.nextLine();
+			if (Pattern.matches("[A-Za-z]{3}", tweetText)) {
+				isValid = true;
+			} else {
+				System.out.println("Tweet must contain atleast 3 characters(A-Z/a-z)");
+				isValid = false;
+			}
+		} while (!isValid);
+
 		Date currentDate = new Date();
 		Tweet tweet = new Tweet(tweetText, userId, currentDate);
 		System.out.println(tweet.getDatePosted());

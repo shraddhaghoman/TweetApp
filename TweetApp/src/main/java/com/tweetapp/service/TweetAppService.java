@@ -31,7 +31,12 @@ public class TweetAppService {
 				System.out.println("\nChoose the action" + "\n 1.Post a tweet" + "\n " + "2.View my tweets" + "\n "
 						+ "3.View all tweets" + "\n " + "4.View All Users" + "\n " + "5.Reset Password" + "\n "
 						+ "6.Logout");
-				int option = sc.nextInt();
+				int option = 0;
+				if (!sc.hasNextInt()) {
+					option = 7;
+				} else {
+					option = sc.nextInt();
+				}
 				sc.nextLine();
 				switch (option) {
 				case 1:
@@ -66,7 +71,7 @@ public class TweetAppService {
 					try {
 						tweetAppActiveService.logoutUser(loggedInUser);
 						isLoggedIn = false;
-						loggedInUser="";
+						loggedInUser = "";
 					} catch (UsernameInvalidException usernameInvalidException) {
 						System.out.println("Error: " + usernameInvalidException.getMessage());
 					}
@@ -78,7 +83,12 @@ public class TweetAppService {
 			} else {
 				System.out.println("You are not logged In \nChoose the action"
 						+ "\n 1.Register \n 2.Login \n 3.Reset Password \n 4.Exit");
-				int option = sc.nextInt();
+				int option = 0;
+				if (!sc.hasNextInt()) {
+					option = 7;
+				} else {
+					option = sc.nextInt();
+				}
 				sc.nextLine();
 				switch (option) {
 				case 1:
