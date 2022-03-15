@@ -34,10 +34,10 @@ public class TweetAppActiveServiceImpl implements TweetAppActiveService {
 		do {
 			System.out.println("Write a tweet: ");
 			tweetText = sc.nextLine();
-			if (Pattern.matches("[A-Za-z]{3}", tweetText)) {
+			if (Pattern.matches(".+", tweetText)) {
 				isValid = true;
 			} else {
-				System.out.println("Tweet must contain atleast 3 characters(A-Z/a-z)");
+				System.out.println("Tweet must contain atleast 1 character");
 				isValid = false;
 			}
 		} while (!isValid);
